@@ -54,7 +54,18 @@ function GenForm({
   generateImageLoading,
   setGenerateImageLoading,
   setCreatePostLoading,
-}) {
+})
+
+{
+
+  const generateImageFun=()=>{
+    setGenerateImageLoading(true);
+    
+  }
+  const createPostFun=()=>{
+    createPostLoading(true);
+    
+  }
   return (
     <Form>
       <Top>
@@ -62,7 +73,13 @@ function GenForm({
         <Desc>Write your prompt according to the Image You want</Desc>
       </Top>
       <Body>
-        <TextInput label="Author" placeholder="Enter your name" value={post.name} />
+        <TextInput
+          label="name"
+          name="name"
+          placeholder="Enter your name"
+          value={post.name}
+          handelChange={(e) => setPost({ ...post, name: e.target.value })}
+        />
         <TextInput
           label="Image Prompt"
           placeholder="Enter the prompt That Your want to Generate the image..."
@@ -70,19 +87,29 @@ function GenForm({
           rows="8"
           textArea
           value={post.prompt}
-          handelChange={(e)=>setPost({...post,prompt: e.target.value})}
+          handelChange={(e) => setPost({ ...post, prompt: e.target.value })}
         />
         **Your can post Your Generated Image to the Community**
       </Body>
       <Action>
-        <Button text="Generate Image" isLoading={generateImageLoading} isDisabled={post.prompt === ""}  flex leftIcon={<AutoAwesome />} />
+        <Button
+          text="Generate Image"
+          isLoading={generateImageLoading}
+          isDisabled={post.prompt === ""}
+          flex
+          leftIcon={<AutoAwesome />}
+          onClick={()=>generateImageFun()}
+        />
         <Button
           text="Post Image"
           flex
           type="secondary"
           isLoading={createPostLoading}
-          isDisabled={post.name === "" || post.prompt === ""|| post.photo === ""}
+          isDisabled={
+            post.name === "" || post.prompt === "" || post.photo === ""
+          }
           leftIcon={<CreateRounded />}
+          onClick={()=>createPostFun()}
         />
       </Action>
     </Form>
