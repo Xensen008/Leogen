@@ -63,8 +63,10 @@ function ImageCards({item}) {
     return (
         <Card>
             <LazyLoadImage
+                style={{borderRadius: "15px"}}
                 width={"100%"}
                 src= {item?.photo}
+                alt={item?.prompt}
             />
             <HoverOverlay>
                 <Prompt>{item?.prompt}</Prompt>
