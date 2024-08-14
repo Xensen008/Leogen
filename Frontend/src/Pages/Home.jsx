@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Searchbar from '../components/Searchbar/Searchbar'
+import ImageCards from '../components/Cards/ImageCards'
 
 const Container = styled.div`
     height: 100%;
@@ -25,7 +26,9 @@ const Headline = styled.h1`
     flex-direction: column;
     color: ${({ theme }) => theme.text_primary};
     @media only screen and (max-width: 600px) {
-        font-size: 30px;
+        font-size: 25px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 `
 
@@ -34,7 +37,7 @@ const Span = styled.span`
     font-weight: 600;
     color: ${({ theme }) => theme.secondary};
     @media only screen and (max-width: 600px) {
-        font-size: 16px;
+        font-size: 20px;
     }
 `
 
@@ -42,8 +45,8 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     width: 100%;
-    max-width: 1400px;
-    padding: 30px 0; 
+    max-width: 1100px;
+    padding: 32px 0; 
 `
 
 const CardWrapper = styled.div`
@@ -52,7 +55,7 @@ const CardWrapper = styled.div`
     @media (min-width: 1200px) {
     grid-template-columns: repeat(4, 1fr);
   }
-    @media(min-width:600px) and (max-width: 1199px) {
+    @media(min-width:640px) and (max-width: 1199px) {
         grid-template-columns: repeat(3, 1fr);
     }
     @media (max-width: 689px) {
@@ -61,6 +64,11 @@ const CardWrapper = styled.div`
 `
 
 function Home() {
+  const item ={
+    photo:"https://imgs.search.brave.com/ryrzmK3gV5Zn2LY8Y98D4LXsgyMJovADDghq-XfK2hg/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTU3/NzI3NzI0L3Bob3Rv/L3N1bnNldC5qcGc_/cz02MTJ4NjEyJnc9/MCZrPTIwJmM9Mloy/TVFQWnZYT3FXb3NW/MTRfaVA0NTREbW1j/QVVhT19MRHRoMHBQ/cUt4VT0",
+    prompt:"A beautiful sunset",
+    author:"John Doe"
+  }
   return (
     <Container>
       <Headline>
@@ -70,12 +78,11 @@ function Home() {
       <Searchbar/>
       <Wrapper>
           <CardWrapper>
-            <div>Card</div>
-            <div>Card</div>
-            <div>Card</div>
-            <div>Card</div>
-            <div>Card</div>
-            <div>Card</div>
+            <ImageCards item={item}  />
+            <ImageCards item={item}  />
+            <ImageCards item={item}  />
+            <ImageCards item={item}  />
+            <ImageCards item={item}  />
           </CardWrapper>
       </Wrapper>
     </Container>

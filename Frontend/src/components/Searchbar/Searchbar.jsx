@@ -6,7 +6,7 @@ const SearchBarContainer = styled.div`
     display: flex;
     max-width: 550px;
     width: 90%;
-    height: 40px;
+    height: 60px;
     border:1px solid ${({ theme }) => theme.text_secondary + 90 };
     color: ${({ theme }) => theme.text_primary};
     border-radius: 8px;
@@ -27,7 +27,7 @@ function Searchbar() {
             border: 'none',
             outline: 'none',
             width: '90%',
-            height: '100%',
+            height: '40px',
             fontSize: '20px',
             backgroundColor: 'transparent',
             color   : "inherit"
