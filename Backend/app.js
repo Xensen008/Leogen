@@ -24,7 +24,7 @@ app.use((err, req, res, next) => {
 
 //default routing
 app.get("/", async (req, res) => {
-  res.send("Hello World its me");
+  res.send("Hello World its me welcom");
 });
 
 //connecting to mongodb
