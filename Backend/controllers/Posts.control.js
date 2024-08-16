@@ -12,34 +12,42 @@ cloudinary.config({
 });
 
 //GET ALL POST
-export const getAllPosts = async(req,res,next) =>{
+export const getAllPosts = async (req, res, next) => {
     try {
         const posts = await Post.find({});
+        if (posts.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No data found"
+            });
+        }
         return res.status(200).json({
-            success:true,
-            data:posts
+            success: true,
+            data: posts
         });
     } catch (error) {
         next(createError(error.status, error?.res?.data?.error?.message || error.message));
     }
-}
+};
 
 //CREATE POST
-export const createPost = async(req,res,next) =>{
-    try {
-        const {name,prompt,photo} = req.body;
-        const photoUrl= cloudinary.uploader.upload(photo)
-        const newPost = await Post.create({
-            name,prompt,photo : (await photoUrl).secure_url
-        })
+export const createPost = async (req, res, next) => {
+  try {
+    const { name, prompt, photo } = req.body;
+    const photoUrl = cloudinary.uploader.upload(photo, {
+      folder: 'leogen', // Specify your folder name here
+    });
+    const newPost = await Post.create({
+      name,
+      prompt,
+      photo: (await photoUrl).secure_url,
+    });
 
-        return res.status(201).json({
-            success:true,
-            data:newPost
-        });
-        
-    
-    } catch (error) {
-        next(createError(error.status, error?.res?.data?.error?.message || error.message));
-    }
-}
+    return res.status(201).json({
+      success: true,
+      data: newPost,
+    });
+  } catch (error) {
+    next(createError(error.status, error?.res?.data?.error?.message || error.message));
+  }
+};

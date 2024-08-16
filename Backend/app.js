@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import PostRouter from "./Routers/Posts.route.js"
+import genRoute from "./Routers/gen.route.js"
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.get("/", async (req, res) => {
 
 //api routes
 app.use("/api/post",PostRouter)
+app.use("/api", genRoute);
 
 
 //connecting to mongodb
