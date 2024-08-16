@@ -32,7 +32,7 @@ const HoverOverlay = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  gap:10px;
+  gap: 10px;
   backdrop-filter: blur(5px);
   background: rgba(0, 0, 0, 0.5);
   color: ${({ theme }) => theme.white};
@@ -45,11 +45,13 @@ const HoverOverlay = styled.div`
     opacity: 1;
   }
 `;
+
 const Prompt = styled.div`
   font-weight: 600px;
   font-size: 20px;
   color: ${({ theme }) => theme.white};
 `;
+
 const Author = styled.div`
   font-weight: 400px;
   font-size: 16px;
@@ -59,33 +61,39 @@ const Author = styled.div`
   color: ${({ theme }) => theme.secondary};
 `;
 
-function ImageCards({item}) {
-    return (
-        <Card>
-            <LazyLoadImage
-                style={{borderRadius: "15px"}}
-                width={"100%"}
-                src= {item?.photo}
-                alt={item?.prompt}
-            />
-            <HoverOverlay>
-                <Prompt>{item?.prompt}</Prompt>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    alignItems: "center",
-                }}>
+function ImageCards({ post }) {
+  // {console.log(post)}
+  return (
+    <Card>
+      <LazyLoadImage
+        style={{ borderRadius: "15px" }}
+        width={"100%"}
+        src={post?.photo}
+        alt={post?.prompt}
+      />
 
-                    <Author sx={{ width: "32px", height: "32px" }}>
-                        <Avatar>{item?.author[0]}</Avatar>
-                        {item?.author}
-                    </Author>
-                    <DownloadRounded  onClick={()=>FileSaver.saveAs(item?.photo ,"download.jpg")} />
-                </div>
-            </HoverOverlay>
-        </Card>
-    );
+      <HoverOverlay>
+        <Prompt>{post?.prompt}</Prompt>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <Author sx={{ width: "32px", height: "32px" }}>
+            <Avatar>{post?.name[0]}</Avatar>
+            {post?.name}
+            {/* {console.log(post)} */}
+          </Author>
+          <DownloadRounded
+            onClick={() => FileSaver.saveAs(post?.photo, "download.jpg")}
+          />
+        </div>
+      </HoverOverlay>
+    </Card>
+  );
 }
 
 export default ImageCards;
