@@ -16,7 +16,7 @@ const SearchBarContainer = styled.div`
     gap: 6px;
 `
 
-function Searchbar() {
+function Searchbar({search, setSearch}) {
   return (
     <SearchBarContainer>
         <SearchOutlined/>
@@ -32,6 +32,8 @@ function Searchbar() {
             backgroundColor: 'transparent',
             color   : "inherit"
         }}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         />
     </SearchBarContainer>
   )
