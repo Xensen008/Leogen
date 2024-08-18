@@ -1,4 +1,4 @@
-import Post from "../models/posts.model.js";
+import Post from "../models/Posts.model.js";
 import * as dotenv from "dotenv";
 import { createError } from "../error.js";
 import { v2 as cloudinary} from "cloudinary";
