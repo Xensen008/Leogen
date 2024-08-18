@@ -47,13 +47,57 @@ const HoverOverlay = styled.div`
 `;
 
 const Prompt = styled.div`
-  font-weight: 600px;
-  font-size: 20px;
+  font-weight: 600;
+  font-size: 15px;
   color: ${({ theme }) => theme.white};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  position: relative;
+`;
+
+const Tooltip = styled.div`
+  visibility: hidden;
+  background-color: ${({ theme }) => theme.black};
+  color: ${({ theme }) => theme.white};
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the text */
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 250px;
+  white-space: normal;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* Arrow at the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: ${({ theme }) => theme.black} transparent transparent transparent;
+  }
+`;
+
+const PromptWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+
+  &:hover ${Tooltip} {
+    visibility: visible;
+  }
 `;
 
 const Author = styled.div`
-  font-weight: 400px;
+  font-weight: 400;
   font-size: 16px;
   display: flex;
   gap: 5px;
@@ -62,7 +106,6 @@ const Author = styled.div`
 `;
 
 function ImageCards({ post }) {
-  // {console.log(post)}
   return (
     <Card>
       <LazyLoadImage
@@ -73,7 +116,10 @@ function ImageCards({ post }) {
       />
 
       <HoverOverlay>
-        <Prompt>{post?.prompt}</Prompt>
+        <PromptWrapper>
+          <Prompt>{post?.prompt}</Prompt>
+          <Tooltip>{post?.prompt}</Tooltip>
+        </PromptWrapper>
         <div
           style={{
             display: "flex",
@@ -85,7 +131,6 @@ function ImageCards({ post }) {
           <Author sx={{ width: "32px", height: "32px" }}>
             <Avatar>{post?.name[0]}</Avatar>
             {post?.name}
-            {/* {console.log(post)} */}
           </Author>
           <DownloadRounded
             onClick={() => FileSaver.saveAs(post?.photo, "download.jpg")}
