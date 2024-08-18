@@ -36,54 +36,67 @@ import axios from "axios";
 import { createError } from "../error.js";
 
 dotenv.config();
-//https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4
-//https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1
-//https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5
+
+const apiUrls = [
+    "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
+    "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4",
+    "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
+];
+
 export const getGenAI = async (req, res, next) => {
     try {
         const { prompt } = req.body;
-        console.log("Received prompt:", prompt); // Log the received prompt
+        // console.log("Received prompt:", prompt); // Log the received prompt
 
-        const response = await axios.post(
-            "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
-            { inputs: prompt },
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.HUGGING_FACE_API_KEY}`,
-                },
-                responseType: 'arraybuffer' 
+        for (let i = 0; i < apiUrls.length; i++) {
+            try {
+                const response = await axios.post(
+                    apiUrls[i],
+                    { inputs: prompt },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${process.env.HUGGING_FACE_API_KEY}`,
+                        },
+                        responseType: 'arraybuffer'
+                    }
+                );
+
+                console.log(`API response status from model ${i + 1}:`, response.status); 
+
+                if (response.status === 200) {
+                    const imageBuffer = Buffer.from(response.data, 'binary');
+                    const imageBase64 = imageBuffer.toString('base64');
+                    return res.status(200).json({
+                        success: true,
+                        photo: imageBase64,
+                        message: `Successfully generated image using model ${i + 1}`
+                    });
+                } else {
+                    console.error(`Failed to generate image using model ${i + 1}. Status:`, response.status); 
+                    console.error("Response data:", response.data); 
+                    res.write(`Trying different model ${i + 2}...\n`);
+                }
+            } catch (error) {
+                console.error(`Error occurred with model ${i + 1}:`, error.message); 
+                if (error.response) {
+                    console.error("Error response status:", error.response.status); 
+                    console.error("Error response data:", error.response.data);
+                }
+                if (error.response?.status === 503) {
+                    return res.status(503).json({
+                        success: false,
+                        message: "The model is currently loading. Please try again in a few moments.",
+                    });
+                }
             }
-        );
-
-        console.log("API response status:", response.status); // Log the response status
-
-        if (response.status === 200) {
-            const imageBuffer = Buffer.from(response.data, 'binary');
-            const imageBase64 = imageBuffer.toString('base64');
-            return res.status(200).json({
-                success: true,
-                photo: imageBase64,
-            });
-        } else {
-            console.error("Failed to generate image. Status:", response.status); // Log the error status
-            console.error("Response data:", response.data); // Log the response data
-            return res.status(500).json({
-                success: false,
-                message: "Failed to generate image. Please try again.",
-            });
         }
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to generate image using all available models. Please try again.",
+        });
     } catch (error) {
-        console.error("Error occurred:", error.message); // Log the error message
-        if (error.response) {
-            console.error("Error response status:", error.response.status); // Log the error response status
-            console.error("Error response data:", error.response.data); // Log the error response data
-        }
-        if (error.response?.status === 503) {
-            return res.status(503).json({
-                success: false,
-                message: "The model is currently loading. Please try again in a few moments.",
-            });
-        }
+        console.error("Error occurred:", error.message); 
         next(createError(error.response?.status || 500, error.response?.data?.error || error.message));
     }
 };

@@ -64,10 +64,12 @@ function GenForm({
   setCreatePostLoading,
 }) {
   const [error, setError] = React.useState("");
+  const [modelMessage, setModelMessage] = React.useState("");
   const navigate = useNavigate();
 
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
+    setModelMessage(""); // Clear previous messages
     await generateImage({ prompt: post.prompt })
       .then((res) => {
         setPost({ ...post, photo: `data:image/jpeg;base64,${res.data?.photo}` });
@@ -118,6 +120,7 @@ function GenForm({
           handelChange={(e) => setPost({ ...post, prompt: e.target.value })}
         />
         {error && <div style={{ color: "red" }}>{error}</div>}
+        {modelMessage && <div style={{ color: "blue" }}>{modelMessage}</div>}
         **Your can post Your Generated Image to the Community**
       </Body>
       <Action>
