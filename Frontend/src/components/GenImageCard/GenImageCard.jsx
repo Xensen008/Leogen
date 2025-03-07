@@ -19,7 +19,7 @@ const Container = styled.div`
 const Image = styled.img`
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 24px;
     background: ${({ theme }) => theme.black + 50};
 `;
@@ -30,7 +30,18 @@ function GenImageCard({ src, loading }) {
         {loading ? (
             <><CircularProgress style={{color:"inherit", height:"24px", width:"24px"}}/> Generating Your Image...</>
         ) : (
-            src ? <Image src={src} alt="Generated" /> : <>Write a prompt to generate image</>
+            src ? (
+              <Image 
+                src={src} 
+                alt="Generated"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  console.log("Error loading image");
+                }}
+              />
+            ) : (
+              <>Write a prompt to generate image</>
+            )
         )}
     </Container>
   );

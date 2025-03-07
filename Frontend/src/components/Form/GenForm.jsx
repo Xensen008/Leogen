@@ -68,25 +68,18 @@ function GenForm({
   const navigate = useNavigate();
 
   const generateImageFun = async () => {
+    if (!post.prompt) return;
     setGenerateImageLoading(true);
-    setModelMessage(""); 
-    const eventSource = new EventSource('/api/genai-status');
-    eventSource.onmessage = (event) => {
-      setModelMessage(event.data);
-    };
-    await generateImage({ prompt: post.prompt })
-      .then((res) => {
-        setPost({ ...post, photo: `data:image/jpeg;base64,${res.data?.photo}` });
-        setGenerateImageLoading(false);
-        setError("");
-        eventSource.close();
-      })
-      .catch((err) => {
-        setError(err?.response?.data?.message);
-        setGenerateImageLoading(false);
-        console.log(err);
-        eventSource.close();
-      });
+    try {
+      const res = await generateImage({ prompt: post.prompt });
+      setPost({ ...post, photo: res.data.photo });
+      setError("");
+    } catch (err) {
+      setError(err?.response?.data?.message || "Something went wrong");
+      console.log(err);
+    } finally {
+      setGenerateImageLoading(false);
+    }
   };
 
   const createPostFun = async () => {

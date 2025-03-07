@@ -34,13 +34,10 @@ export const getAllPosts = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
   try {
     const { name, prompt, photo } = req.body;
-    const photoUrl = cloudinary.uploader.upload(photo, {
-      folder: 'leogen', // Specify your folder name here
-    });
     const newPost = await Post.create({
       name,
       prompt,
-      photo: (await photoUrl).secure_url,
+      photo: photo, // Store the URL directly
     });
 
     return res.status(201).json({
